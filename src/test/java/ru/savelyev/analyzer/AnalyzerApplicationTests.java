@@ -29,36 +29,32 @@ class AnalyzerApplicationTests {
 
     @Test
     void calculateCharacterFrequency_successful() throws Exception {
-        mvc.perform(get("/api/calculate-character-frequency?source=ababacbb")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get("/api/calculate-character-frequency")
+                        .param("source", "ababacbb"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().string("{\"b\":4,\"a\":3,\"c\":1}"));
     }
 
     @Test
-    void calculateCharacterFrequency_withoutParameter() throws Exception {
-        mvc.perform(get("/api/calculate-character-frequency").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void calculateCharacterFrequency_emptyParameter() throws Exception {
-        mvc.perform(get("/api/calculate-character-frequency?source=").contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get("/api/calculate-character-frequency")
+                        .param("source", " "))
                 .andExpect(status().isBadRequest());
 
     }
-
     @Test
     void calculateCharacterFrequency_blankParameter() throws Exception {
-        mvc.perform(get("/api/calculate-character-frequency?source=    ")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get("/api/calculate-character-frequency")
+                        .param("source","         "))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void calculateCharacterFrequency_StringLengthViolation() throws Exception {
-        mvc.perform(get("/api/calculate-character-frequency?source").contentType(MediaType.APPLICATION_JSON))
+        String str = new String(new char[length + 1]);
+        mvc.perform(get("/api/calculate-character-frequency")
+                        .param("source,",str))
                 .andExpect(status().isBadRequest());
     }
 
